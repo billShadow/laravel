@@ -21,6 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix'=>'test'], function(){
     Route::get('index', 'Api\TestController@index');
     Route::any('redistest', 'Api\TestController@redistest');
+    Route::post('savefile', 'Api\TestController@savefile');
+    Route::post('test123', 'Api\TestController@test123');
 
 });
 

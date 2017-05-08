@@ -6,6 +6,9 @@ use App\Libs\pay;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
+use OSS\OssClient;
+use Qiniu\Auth;
+use Qiniu\Storage\UploadManager;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 
@@ -68,4 +71,34 @@ class TestController extends Controller
         $res = Redis::get('token');
         var_dump($res);
     }
+
+    // 七牛云存储文件
+    public function savefile(Request $request)
+    {
+        $file = $request->file('images_file');
+        var_dump($_FILES);
+        var_dump($file);die;
+        $accessKey = 'eXtNyeCN7F33eLnA5sTDfbSarYPNmPEPEwzD-Sdo';
+        $secretKey = 'rp_ohvn98wrDUjs9J34SOPD3T9p1_uWv2FWrT7pP';
+        $bucket = 'billimg';
+        // 初始化签权对象
+        $auth = new Auth($accessKey, $secretKey);
+        var_dump($auth);
+
+        $upToken = $auth->uploadToken($bucket);
+        //$file = $_FILES['filname'];
+        var_dump($_FILES);die;
+        $key = date('Y/m/d/').'image_'.str_random(10).'.png';
+        $uploadMgr = new UploadManager($auth);
+        $res = $uploadMgr->putFile($token, $key, $file['tmp_name']);
+        var_dump($res);
+
+
+    }
+
+    public function test123()
+    {
+        var_dump($_FILES);
+    }
+
 }
