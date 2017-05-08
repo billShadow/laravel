@@ -98,6 +98,7 @@ class TestController extends Controller
 
     public function test123()
     {
+        echo 111;
         var_dump($_FILES);
     }
 
