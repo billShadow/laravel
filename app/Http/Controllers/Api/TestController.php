@@ -6,6 +6,7 @@ use App\Libs\pay;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Storage;
 use OSS\OssClient;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
@@ -98,5 +99,26 @@ class TestController extends Controller
         echo 111;
         var_dump($_FILES);
     }
+
+    // 上传文件到本地 例如图片
+    public function uploadfile(Request $request)
+    {
+        $img_url = $request->file('images');
+        $ext = strtolower($img_url->getClientOriginalExtension());     // 扩展名
+        if (!in_array($ext, ['png', 'jpg', 'jpeg'])) {
+            fun_respon(0, '上传图片格式错误', 'addbanner');
+        }
+        if (isset($_FILES['images']['size']) && $_FILES['images']['size'] >= 8*1024*1024) {
+            fun_respon(0, '上传图片大小不得超过8M', 'addbanner');
+        }
+        $video_tem_img = 'image_'.str_random(16) . '.'.$ext;
+        $put_result = Storage::disk('uploadimg')->put(
+            $video_tem_img,
+            file_get_contents($img_url->getRealPath()),
+            'public'
+        );
+        var_dump($put_result);
+    }
+
 
 }

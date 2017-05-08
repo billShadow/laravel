@@ -23,6 +23,7 @@ Route::group(['prefix'=>'test'], function(){
     Route::any('redistest', 'Api\TestController@redistest');
     Route::post('savefile', 'Api\TestController@savefile');
     Route::post('test123', 'Api\TestController@test123');
+    Route::post('uploadfile', 'Api\TestController@uploadfile');
 
 });
 
