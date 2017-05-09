@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Libs\pay;
+use App\Libs\SendCode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
@@ -123,6 +124,14 @@ class TestController extends Controller
         $res = QrCode::format('png')->merge(storage_path('app/images/').'0.jpg', .25, true)->size(400)->margin(1)->errorCorrection('M')->generate('Make me into a QrCode!', storage_path('app/images/').$filename);
         var_dump($res);
     }
+
+    public function sedncode()
+    {
+        $smscode = new SendCode();
+        $res = $smscode->phoneCode('15101048253', '6666');
+        var_dump($res);
+    }
+
 
 
 

@@ -24,6 +24,7 @@ Route::group(['prefix'=>'test'], function(){
     Route::post('savefile', 'Api\TestController@savefile');
     Route::post('uploadfile', 'Api\TestController@uploadfile');
     Route::post('creatercode', 'Api\TestController@creatercode');
+    Route::post('sedncode', 'Api\TestController@sedncode');
 
 });
 
