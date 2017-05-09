@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use OSS\OssClient;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 
@@ -94,12 +95,6 @@ class TestController extends Controller
 
     }
 
-    public function test123()
-    {
-        echo 111;
-        var_dump($_FILES);
-    }
-
     // 上传文件到本地 例如图片
     public function uploadfile(Request $request)
     {
@@ -119,6 +114,16 @@ class TestController extends Controller
         );
         var_dump($put_result);
     }
+
+    // 创建二维码
+    public function creatercode()
+    {
+        $filename = 'qrcode_'.str_random(20).'.png';
+
+        $res = QrCode::format('png')->merge(storage_path('app/images/').'0.jpg', .25, true)->size(400)->margin(1)->errorCorrection('M')->generate('Make me into a QrCode!', storage_path('app/images/').$filename);
+        var_dump($res);
+    }
+
 
 
 }
