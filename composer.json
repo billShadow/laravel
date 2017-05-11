@@ -12,7 +12,7 @@
         "qiniu/php-sdk": "^7.1",
         "tymon/jwt-auth": "0.5.*",
         "simplesoftwareio/simple-qrcode": "~1",
-        "ixudra/curl": "6.*"
+        "ixudra/curl": "^6.10"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
