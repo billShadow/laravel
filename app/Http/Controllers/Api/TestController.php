@@ -125,7 +125,8 @@ class TestController extends Controller
         var_dump($res);
     }
 
-    public function sedncode()
+    // 发送验证码  阿里云短信发送
+    public function sendcode()
     {
         $smscode = new SendCode();
         $res = $smscode->phoneCode('15101048253', '6666');
