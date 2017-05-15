@@ -133,7 +133,7 @@ class TestController extends Controller
         var_dump($res);
     }
 
-    // 简单的接口签名认证
+    // 简单的接口签名认证 （第三方调用接口案例）
     public function apiSign()
     {
         $timestamp = time();
@@ -143,6 +143,7 @@ class TestController extends Controller
         self::apiCheckSign($timestamp, $random, $sign);
     }
 
+    // 提供接口方验证接口案例
     public function apiCheckSign($timestamp, $random, $sign)
     {
         // 可以先根据时间戳判断签名是否过期  自己定义即可
