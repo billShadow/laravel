@@ -133,6 +133,29 @@ class TestController extends Controller
         var_dump($res);
     }
 
+    // 简单的接口签名认证
+    public function apiSign()
+    {
+        $timestamp = time();
+        $random = str_random(10);
+        $key = 'mcds!@#$%^';
+        $sign = md5(md5($key).md5($timestamp.$random));
+        self::apiCheckSign($timestamp, $random, $sign);
+    }
+
+    public function apiCheckSign($timestamp, $random, $sign)
+    {
+        // 可以先根据时间戳判断签名是否过期  自己定义即可
+        if (time() > ($timestamp+300)) { // 签名五分钟失效
+            fun_respon(0, '签名已过期');
+        }
+        $local_sign = md5(md5('mcds!@#$%^').md5($timestamp.$random));
+        if ($local_sign != $sign) {
+            fun_respon(0, '签名错误');
+        }
+        fun_respon(1, "认证通过");
+    }
+
 
 
 
