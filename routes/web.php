@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix'=>'adm'], function(){
+    Route::get('login', 'Admin\LoginController@login');
+    Route::post('dologin', 'Admin\LoginController@dologin');
+});

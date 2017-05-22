@@ -40,6 +40,44 @@ class CreateInitTable extends Migration
             });
         }
 
+        // 后台用户管理
+        if ( !Schema::hasTable('adm_user') ) {
+            Schema::create('adm_user', function (Blueprint $table) {
+                $table->engine = 'InnoDB';
+                $table->charset = 'utf8mb4';
+                $table->collation = 'utf8mb4_general_ci';
+                $table->increments('id')->comment('自增ID');
+                $table->string('account', 30)->default('')->comment('账号');
+                $table->string('pass', 80)->default('')->comment('密码');
+                $table->string('nickname', 30)->default('')->comment('昵称');
+                $table->tinyInteger('user_type')->default(1)->comment('用户类型');
+                $table->tinyInteger('is_valid')->default(1)->comment('是否有效');
+                $table->timestamps();
+            });
+        }
+
+        // 订单表
+        if ( !Schema::hasTable('order') ) {
+            Schema::create('order', function (Blueprint $table) {
+                $table->engine = 'InnoDB';
+                $table->charset = 'utf8mb4';
+                $table->collation = 'utf8mb4_general_ci';
+                $table->increments('order_id')->comment('自增订单ID');
+                $table->string('order_no', 50)->default('')->comment('订单编号');
+                $table->integer('user_id')->comment('关联用户ID');
+                $table->tinyInteger('order_status')->default(1)->comment('订单状态 1未扣减积分 2已扣减积分 3无效订单');
+                $table->string('card_id', 30)->default('')->comment('优惠券卡号');
+                $table->float('integral')->default(0)->comment('积分数');
+                $table->tinyInteger('is_valid')->default(1)->comment('是否有效，0:无效，1:有效');
+                $table->timestamps();
+                $table->unique('order_no');
+                $table->index('order_status');
+                $table->index('user_id');
+                $table->index(['user_id', 'order_status']);
+                $table->index('card_id');
+            });
+        }
+
         // 店铺表
         if ( !Schema::hasTable('shop') ) {
             Schema::create('shop', function (Blueprint $table) {
@@ -70,6 +108,7 @@ class CreateInitTable extends Migration
     public function down()
     {
         Schema::dropIfExists('shop');
+        Schema::dropIfExists('order');
         Schema::dropIfExists('users');
     }
 }
