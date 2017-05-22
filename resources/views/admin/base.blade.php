@@ -9,7 +9,7 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
 	<meta name="apple-mobile-web-app-capable" content="yes">	
 	<meta name="format-detection" content="telephone=no">
-	<link rel="icon" href="/images/mcdl.jpg" type="image/x-icon" />{{--显示ICO图标--}}
+	<link rel="icon" href="/admin/images/mcdl.jpg" type="image/x-icon" />{{--显示ICO图标--}}
 	<!-- load css -->
 	<link rel="stylesheet" type="text/css" href="/admin/common/layui/css/layui.css" media="all">
 	<link rel="stylesheet" type="text/css" href="/admin/common/global.css" media="all">

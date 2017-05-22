@@ -19,4 +19,11 @@ Route::group(['prefix'=>'adm'], function(){
     Route::get('login', 'Admin\LoginController@login');
     Route::post('dologin', 'Admin\LoginController@dologin');
     Route::get('index', 'Admin\UserController@index');
+
+
+
+    Route::group(['prefix'=>'user'], function(){
+        Route::get('userlist', 'Admin\UserController@userlist');
+        Route::get('deluser', 'Admin\UserController@deluser');
+    });
 });
