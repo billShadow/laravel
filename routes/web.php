@@ -18,4 +18,5 @@ Route::get('/', function () {
 Route::group(['prefix'=>'adm'], function(){
     Route::get('login', 'Admin\LoginController@login');
     Route::post('dologin', 'Admin\LoginController@dologin');
+    Route::get('index', 'Admin\UserController@index');
 });

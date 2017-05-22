@@ -83,6 +83,7 @@ if (! function_exists('ajax_respon')) {
             $result['data'] = $res;
             $result['code'] = 200;
         } else {
+            $res = ErrorCode::msg($code);
             $result['result'] = 0;
             $result['msg'] = $res;
             $result['code'] = $code;
