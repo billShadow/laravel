@@ -65,11 +65,13 @@ class TestController extends Controller
         $pay = new pay();
         $res = $pay->index();
         var_dump($res);
+
     }
 
     // redis
     public function redistest()
     {
+        fun_respon(0, '错误码测试', 11001);
         Redis::set('token', '123');
         $res = Redis::get('token');
         var_dump($res);

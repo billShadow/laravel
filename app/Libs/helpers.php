@@ -1,4 +1,5 @@
 <?php
+use App\Libs\ErrorCode;
 /**
  * 全局自定义函数
  */
@@ -36,6 +37,7 @@ if (! function_exists('mkDirs')) {
 }
 
 if (! function_exists('fun_respon')) {
+
     /**
      *  return json maxed
      */
@@ -53,6 +55,7 @@ if (! function_exists('fun_respon')) {
             $result['data'] = $res;
             $result['code'] = 200;
         } else {
+            $res = ErrorCode::msg($code);
             $result['result'] = 0;
             $result['msg'] = $res;
             $result['code'] = $code;
