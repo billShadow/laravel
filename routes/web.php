@@ -26,4 +26,11 @@ Route::group(['prefix'=>'adm'], function(){
         Route::get('userlist', 'Admin\UserController@userlist');
         Route::get('deluser', 'Admin\UserController@deluser');
     });
+
+    Route::group(['prefix'=>'order'], function(){
+        Route:: get('orderlist', 'Admin\OrderController@orderlist');
+        Route:: get('addorder', 'Admin\OrderController@addorder');
+        Route:: get('exportorder', 'Admin\OrderController@exportorder');
+        Route:: post('importorder', 'Admin\OrderController@importorder');
+    });
 });

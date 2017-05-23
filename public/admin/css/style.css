@@ -409,7 +409,7 @@ body,*{ font-size:14px;}
 }
 
 .layui-upload-icon i {
-  background:url(/images/addicon.png) left center no-repeat; width:20px; height:20px; background-size:100% 100%; float:left;    margin-top: 8px;
+  background:url(/admin/images/addicon.png) left center no-repeat; width:20px; height:20px; background-size:100% 100%; float:left;    margin-top: 8px;
 }
 
 .tab-ths th {
