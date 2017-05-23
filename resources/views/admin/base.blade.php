@@ -68,9 +68,9 @@
 		   </li>
 			<li class="layui-nav-item">
 				<dd class="
-					<?php if($_SERVER['REQUEST_URI'] == '/adm/video/videolist' ){ echo 'layui-this';} ?>"
+					<?php if($_SERVER['REQUEST_URI'] == '/adm/order/orderlist' ){ echo 'layui-this';} ?>"
 				>
-					<a href="{{url('adm/video/videolist')}}">
+					<a href="{{url('adm/order/orderlist')}}">
 						<i class="iconfont icon-wenzhang1" ></i>
 						<span>视频管理</span>
 					</a>
