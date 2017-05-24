@@ -157,6 +157,7 @@ class TestController extends Controller
             fun_respon(0, '签名错误');
         }
         fun_respon(1, "认证通过");
+        // test git reset
     }
 
 
