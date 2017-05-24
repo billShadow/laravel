@@ -158,6 +158,7 @@ class TestController extends Controller
         }
         fun_respon(1, "认证通过");
         // test git reset
+        // test git reset 2
     }
 
 
