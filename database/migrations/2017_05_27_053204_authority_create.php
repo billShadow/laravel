@@ -20,7 +20,6 @@ class AuthorityCreate extends Migration
                 $table->charset = 'utf8';
                 $table->collation = 'utf8_general_ci';
                 $table->increments('role_id')->comment('自增ID');
-                $table->tinyInteger('user_id')->comment('关联用户ID');
                 $table->string('role_name', 32)->nullable()->comment('角色名称');
                 $table->string('role_desc', 100)->nullable()->comment('角色功能说明');
                 $table->timestamps();
@@ -67,6 +66,8 @@ class AuthorityCreate extends Migration
                 $table->tinyInteger('role_id')->comment('关联角色ID');
                 $table->timestamps();
                 $table->softDeletes();
+                $table->index('user_id', 'user_id');
+                $table->index('role_id', 'role_id');
             });
         }
 

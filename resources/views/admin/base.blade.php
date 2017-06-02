@@ -56,6 +56,29 @@
 						<i class="iconfont icon-wenzhang1" ></i>
 						<span>用户管理</span>
 					</a>
+				</dd>
+			</li>
+			<li class="layui-nav-item <?php if($_SERVER['REQUEST_URI'] == '/adm/power/rolelist' ||  $_SERVER['REQUEST_URI'] == '/adm/power/actionlist'){ echo 'layui-nav-itemed';} ?>" >
+				<a href="javascript:;">
+					<i class="iconfont icon-wenzhang1" ></i>
+					<span>权限管理</span>
+					<em class="layui-nav-more"></em>
+				</a>
+				<dl class="layui-nav-child ">
+					<dd class="<?php if($_SERVER['REQUEST_URI'] == '/adm/power/rolelist' ){ echo 'layui-this';} ?>">
+						<a href="{{ url('/adm/power/rolelist') }}">
+							<i class="iconfont icon-zhuti"  data-icon='icon-zhuti'></i>
+							<span>角色</span>
+						</a>
+					</dd>
+					<dd class="<?php if($_SERVER['REQUEST_URI'] == '/adm/power/actionlist' ){ echo 'layui-this';} ?>">
+						<a href="{{ url('/adm/power/actionlist') }}">
+							<i class="iconfont icon-zhuti"  data-icon='icon-zhuti'></i>
+							<span>功能模块</span>
+						</a>
+					</dd>
+
+				</dl>
 			</li>
 			<li class="layui-nav-item">
 				<dd class="

@@ -160,6 +160,15 @@ class TestController extends Controller
         // test git reset
     }
 
+    // 通过读取远程url二维码地址保存二维码到本地
+    public function saveqrcode()
+    {
+        $img = file_get_contents('http://qr.liantu.com/api.php?text=123');
+        $a = file_put_contents('./../storage/app/images/2.png', $img);
+        //$a = Storage::disk('uploadimg')->put('1.png', $img);
+        var_dump($a);
+    }
+
 
 
 

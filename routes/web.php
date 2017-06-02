@@ -30,6 +30,20 @@ Route::group(['prefix'=>'adm'], function(){
         Route:: get('exportorder', 'Admin\OrderController@exportorder');
         Route:: post('importorder', 'Admin\OrderController@importorder');
     });
+
+    Route::group(['prefix'=>'power'], function(){
+        Route::get('rolelist', 'Admin\PowerController@rolelist');
+        Route::get('addrole', 'Admin\PowerController@addrole');
+        Route::post('doaddrole', 'Admin\PowerController@doaddrole');
+        Route::get('editrole', 'Admin\PowerController@editrole');
+        Route::post('doeditrole', 'Admin\PowerController@doeditrole');
+        Route::get('delrole', 'Admin\PowerController@delrole');
+
+        Route::get('actionlist', 'Admin\PowerController@actionlist');
+        Route::get('addaction', 'Admin\PowerController@addaction');
+        Route::post('doaddaction', 'Admin\PowerController@doaddaction');
+        Route::get('delaction', 'Admin\PowerController@delaction');
+    });
 });
 
 Route::group(['prefix'=>'adm', 'middleware'=>['check.admtoken']], function(){
