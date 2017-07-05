@@ -170,6 +170,39 @@ class TestController extends Controller
     }
 
 
+    /**
+     * 微信网页授权功能
+     */
+    public function test()
+    {
+        //$home = urlencode('http://gateway.dev.osv.cn/common/oauth2'); //授权回调地址
+        $home = 'http://gateway.dev.osv.cn/common/oauth2'; //授权回调地址
+        $appid = 'wxeeceb425ddb3df8c';
+        $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.$appid.'&redirect_uri='.$home.'&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect';
+        header('Location:'.$url);
+    }
+
+    // 授权回调
+    public function oauth2(Request $request)
+    {
+        $code = $request->code;
+        $appId = 'wxeeceb425ddb3df8c';
+        $appSecret = 'ee81d9acac56c0b93daf47440fdf92aa';
+        $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$appId.'&secret='.$appSecret.'&code='.$code.'&grant_type=authorization_code';
+        $access_token = Curl::to( $url )
+            ->get();
+        $res = json_decode($access_token, true);
+        var_dump($res);
+
+        $url = 'https://api.weixin.qq.com/sns/userinfo?access_token='.$res['access_token'].'&openid='.$res['openid'];
+
+        $info = Curl::to( $url )
+            ->get();
+        $info = json_decode($info, true);
+        var_dump($info);
+    }
+
+
 
 
 
