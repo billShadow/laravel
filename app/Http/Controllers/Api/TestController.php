@@ -172,6 +172,7 @@ class TestController extends Controller
 
     /**
      * 微信网页授权功能
+     * 网页授权的时候记得设置网页授权域名   公众号设置-》功能设置-》网页授权域名
      */
     public function test()
     {
