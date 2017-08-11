@@ -177,7 +177,7 @@ class TestController extends Controller
     {
         //$home = urlencode('http://gateway.dev.osv.cn/common/oauth2'); //授权回调地址
         $home = 'http://gateway.dev.osv.cn/common/oauth2'; //授权回调地址
-        $appid = 'wxeeceb425ddb3df8c';
+        $appid = 'wx1985bd0909bbc1f9';
         $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.$appid.'&redirect_uri='.$home.'&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect';
         header('Location:'.$url);
     }
@@ -186,8 +186,8 @@ class TestController extends Controller
     public function oauth2(Request $request)
     {
         $code = $request->code;
-        $appId = 'wxeeceb425ddb3df8c';
-        $appSecret = 'ee81d9acac56c0b93daf47440fdf92aa';
+        $appId = 'wx1985bd0909bbc1f9';
+        $appSecret = '4e274ce907cf7cda0fa79876c3f2f911';
         $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$appId.'&secret='.$appSecret.'&code='.$code.'&grant_type=authorization_code';
         $access_token = Curl::to( $url )
             ->get();
