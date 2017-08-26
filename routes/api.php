@@ -26,6 +26,8 @@ Route::group(['prefix'=>'test'], function(){
     Route::post('creatercode', 'Api\TestController@creatercode');
     Route::post('sendcode', 'Api\TestController@sendcode');
     Route::post('apisign', 'Api\TestController@apiSign');
+    Route::post('wechat', 'Api\TestController@wechat');
+
 
 });
 

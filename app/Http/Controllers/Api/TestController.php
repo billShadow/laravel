@@ -161,6 +161,51 @@ class TestController extends Controller
         // test git reset 2
     }
 
+    // 通过读取远程url二维码地址保存二维码到本地
+    public function saveqrcode()
+    {
+        $img = file_get_contents('http://qr.liantu.com/api.php?text=123');
+        $a = file_put_contents('./../storage/app/images/2.png', $img);
+        //$a = Storage::disk('uploadimg')->put('1.png', $img);
+        var_dump($a);
+    }
+
+
+    /**
+     * 微信网页授权功能
+     * 网页授权的时候记得设置网页授权域名   公众号设置-》功能设置-》网页授权域名
+     */
+    public function test()
+    {
+        //$home = urlencode('http://gateway.dev.osv.cn/common/oauth2'); //授权回调地址
+        $home = 'http://gateway.dev.osv.cn/common/oauth2'; //授权回调地址
+        $appid = 'wx1985bd0909bbc1f9';
+        $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.$appid.'&redirect_uri='.$home.'&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect';
+        header('Location:'.$url);
+    }
+
+    // 授权回调
+    public function oauth2(Request $request)
+    {
+        $code = $request->code;
+        $appId = 'wx1985bd0909bbc1f9';
+        $appSecret = '4e274ce907cf7cda0fa79876c3f2f911';
+        $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$appId.'&secret='.$appSecret.'&code='.$code.'&grant_type=authorization_code';
+        $access_token = Curl::to( $url )
+            ->get();
+        $res = json_decode($access_token, true);
+        var_dump($res);
+
+        $url = 'https://api.weixin.qq.com/sns/userinfo?access_token='.$res['access_token'].'&openid='.$res['openid'];
+
+        $info = Curl::to( $url )
+            ->get();
+        $info = json_decode($info, true);
+        var_dump($info);
+    }
+
+
+
 
 
 
