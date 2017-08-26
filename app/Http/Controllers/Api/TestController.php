@@ -159,6 +159,7 @@ class TestController extends Controller
         fun_respon(1, "认证通过");
         // test git reset
         // test git reset 2
+        // checkout -- file
     }
 
     // 通过读取远程url二维码地址保存二维码到本地
