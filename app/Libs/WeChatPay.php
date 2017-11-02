@@ -1,4 +1,7 @@
 <?php
+/**
+ * 微信支付demo
+ */
 namespace App\Libs;
 
 class WeChatPay {
