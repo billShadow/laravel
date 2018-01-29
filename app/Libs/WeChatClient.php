@@ -5,8 +5,9 @@
  *  secert:   1d3e10ce3ea7da269e10f7805564d2c9
  */
 
-namespace App\Libs;
+namespace App\lib\WeChat;
 
+use App\lib\Util;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\Redis;
 class WeChatClient {
@@ -202,7 +203,7 @@ class WeChatClient {
             $result["nonceStr"] = $postObj['nonce_str'];  //不加""拿到的是一个json对象
             $result["package"] = "prepay_id=".$postObj['prepay_id'];
             $result["signType"] = "MD5";
-            $result['appId'] = env('WX_APPID');
+            $result['appId'] = $this->appid;
             ksort($result);
             $paySignStr = $this->getWxSign($result);
             $result["paySign"] = strtoupper(MD5($paySignStr));
@@ -224,7 +225,7 @@ class WeChatClient {
     {
         $data['mch_appid'] = $this->TURN_MCH_APPID;
         $data['mchid'] = $this->TURN_MCHID;
-        $data['spbill_create_ip'] = Util::get_client_ip();
+        $data['spbill_create_ip'] = $this->get_client_ip();
         ksort($data);
         $signStr = $this->getWxSign( $data );
         $data["sign"] = strtoupper(MD5($signStr));
@@ -319,111 +320,78 @@ class WeChatClient {
 
     /**
      *
-     * 通过跳转获取用户信息，跳转流程如下：
+     * 通过跳转获取用户的openid，跳转流程如下：
      * 1、设置自己需要调回的url及其其他参数，跳转到微信服务器https://open.weixin.qq.com/connect/oauth2/authorize
      * 2、微信服务处理完成之后会跳转回用户redirect_uri地址，此时会带上一些参数，如：code
      *
      * @return 用户的openid
      */
-    public function getUserInfo()
+    public function GetOpenid()
     {
         //通过code获得openid
-        if (!isset($_GET['code'])){
+        if (!(isset($_GET['code']) && $_GET['code'])){
             //触发微信返回code码
-            $baseUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
-            $url = $this->__CreateOauthUrlForCode($baseUrl);
+            //$baseUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
+            $baseUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+            $urlObj["appid"] = env('WX_APPID');
+            $urlObj["redirect_uri"] = "$baseUrl"; // 自己回调自己
+            $urlObj["response_type"] = "code";
+            $urlObj["scope"] = "snsapi_base";
+            $urlObj["state"] = "STATE"."#wechat_redirect&connect_redirect=1";
+            $bizString = $this->getWxSign($urlObj);
+            $url = "https://open.weixin.qq.com/connect/oauth2/authorize?".$bizString;
             Header("Location: $url");
             exit();
         } else {
             //获取code码，以获取openid
             $code = $_GET['code'];
-            $url = $this->__CreateOauthUrlForOpenid($code);
-            $res = $this->__GetCurl($url);
-            return $res;
+            $urlObj["appid"] = env('WX_APPID','wx1985bd0909bbc1f9');//WxPayConfig::APPID;
+            $urlObj["secret"] = env('WX_APPSECRET','4e274ce907cf7cda0fa79876c3f2f911');//WxPayConfig::APPSECRET;
+            $urlObj["code"] = $code;
+            $urlObj["grant_type"] = "authorization_code";
+            $bizString = $this->getWxSign($urlObj);
+            $url = "https://api.weixin.qq.com/sns/oauth2/access_token?".$bizString;
+            $res = $this->httpGet($url);
+            $respon = json_decode($res, 1);
+            return $respon;
+            //return isset($respon['openid']) ? $respon['openid'] : 0;
         }
     }
 
-    /**
+    /*
      *
-     * 通过code从工作平台获取openid机器access_token
-     * @param string $url 请求的url
-     * @param int $curl_timeout 超时时间
-     *
-     * @return openid
+     * 获取用户详细信息
+     * @return 用户详细信息
      */
-    public function __GetCurl($url, $curl_timeout=60)
+    public function __GetUserInfo()
     {
-        //初始化curl
-        $ch = curl_init();
-        //设置超时
-        curl_setopt($ch, CURLOPT_TIMEOUT, $curl_timeout);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,FALSE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        //运行curl，结果以jason形式返回
-        $res = curl_exec($ch);
-        curl_close($ch);
-        return $res;
-    }
-
-
-
-    /**
-     *
-     * 构造获取code的url连接
-     * @param string $redirectUrl 微信服务器回跳的url，需要url编码
-     *
-     * @return 返回构造好的url
-     */
-    private function __CreateOauthUrlForCode($redirectUrl)
-    {
-        $urlObj["appid"] = $this->appid;
-        $urlObj["redirect_uri"] = "$redirectUrl";
-        $urlObj["response_type"] = "code";
-        $urlObj["scope"] = "snsapi_base";
-        $urlObj["state"] = "STATE"."#wechat_redirect";
-        $bizString = $this->ToUrlParams($urlObj);
-        return "https://open.weixin.qq.com/connect/oauth2/authorize?".$bizString;
-    }
-
-    /**
-     *
-     * 构造获取open和access_toke的url地址
-     * @param string $code，微信跳转带回的code
-     *
-     * @return 请求的url
-     */
-    private function __CreateOauthUrlForOpenid($code)
-    {
-        $urlObj["appid"] = $this->appid;
-        $urlObj["secret"] = $this->appsecret;
-        $urlObj["code"] = $code;
-        $urlObj["grant_type"] = "authorization_code";
-        $bizString = $this->ToUrlParams($urlObj);
-        return "https://api.weixin.qq.com/sns/oauth2/access_token?".$bizString;
-    }
-
-    /**
-     *
-     * 拼接签名字符串
-     * @param array $urlObj
-     *
-     * @return 返回已经拼接好的字符串
-     */
-    private function ToUrlParams($urlObj)
-    {
-        $buff = "";
-        foreach ($urlObj as $k => $v)
-        {
-            if($k != "sign"){
-                $buff .= $k . "=" . $v . "&";
-            }
+        $authinfo =  $this->GetOpenid();
+        if (!isset($authinfo['openid'])) {
+            return false; // 让用户重新扫码进入
         }
+        $openid = $authinfo['openid'];
+        $accessToken = $authinfo['access_token']; // 这个access_token和基础的access_token不是同一个token
+        $url = "https://api.weixin.qq.com/sns/userinfo?access_token=$accessToken&openid=$openid&lang=zh_CN";
+        $res = $this->httpGet($url);
+        return json_decode($res,true);
+    }
 
-        $buff = trim($buff, "&");
-        return $buff;
+    /**
+     *
+     * 获取用户基本信息
+     * @return 用户详细信息
+     */
+    public function __GetUserInfos()
+    {
+        $authinfo =  $this->GetOpenid();
+        if (!isset($authinfo['openid'])) {
+            return false;
+        }
+        $openid = $authinfo['openid'];
+        $accessToken = $authinfo['access_token'];
+        $url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$accessToken&openid=$open_id&lang=zh_CN";
+        $res = $this->httpGet($url);
+        return json_decode($res,true);
     }
 
 
@@ -444,6 +412,20 @@ class WeChatClient {
             ->post();
         return $rs;
 
+    }
+
+    public function get_client_ip()
+    {
+        if ($_SERVER['REMOTE_ADDR']) {
+            $cip = $_SERVER['REMOTE_ADDR'];
+        } elseif (getenv("REMOTE_ADDR")) {
+            $cip = getenv("REMOTE_ADDR");
+        } elseif (getenv("HTTP_CLIENT_IP")) {
+            $cip = getenv("HTTP_CLIENT_IP");
+        } else {
+            $cip = "unknown";
+        }
+        return $cip;
     }
 
     /**
@@ -538,5 +520,12 @@ class WeChatClient {
         }
         return $str;
     }
+
+
+    /**
+     * 网页授权模块部分
+     */
+
+
 
 }
